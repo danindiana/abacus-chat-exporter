@@ -1,5 +1,9 @@
 # Abacus.AI Chat Exporter
 
+Thinking of leaving abacus.ai but can't seem to find anyway to take your data with you? 
+
+Then the Abacus.ai Chat Exporter is for you!
+
 Bulk download and export your Abacus.AI chat sessions to HTML and JSON format.
 
 ## 🚀 Quick Start
