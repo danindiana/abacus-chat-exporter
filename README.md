@@ -1,12 +1,16 @@
-# Abacus.AI Chat Exporter
+# Abacus.AI Chat Exporter & PDF Processor
 
 Thinking of leaving abacus.ai but can't seem to find anyway to take your data with you? 
 
 Then the Abacus.ai Chat Exporter is for you!
 
-Bulk download and export your Abacus.AI chat sessions to HTML and JSON format.
+**Two powerful tools for Abacus.AI:**
+1. 💬 **Chat Exporter**: Bulk download your chat conversations to HTML and JSON format
+2. 📄 **PDF Processor**: Batch upload and process PDFs with automated prompts
 
 ## 🚀 Quick Start
+
+### Export Chats
 
 **Export all chats from all projects:**
 
@@ -30,13 +34,30 @@ export ABACUS_API_KEY="your-key"
 - See **[PROJECT_SCOPED_SOLUTION.md](PROJECT_SCOPED_SOLUTION.md)** 
 - Or **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** for troubleshooting
 
+### Process PDFs
+
+**Batch upload and process PDFs with automated prompts:**
+
+```bash
+./process_pdfs.sh
+```
+
+See **[PDF_PROCESSING.md](PDF_PROCESSING.md)** for detailed documentation.
+
 ## Overview
 
-Abacus.AI provides APIs to list and export chat sessions. This project includes scripts for:
+### Chat Exporter
+Abacus.AI provides APIs to list and export chat sessions. This tool includes scripts for:
 
 - **Option A**: Exporting "Data Science Copilot" chats (AI Chat)
 - **Option B**: Exporting "Deployment Conversations" (production assistant chats)
 - **Diagnostic Tools**: Find where your chats are stored
+
+### PDF Processor
+Automates bulk PDF uploads to Abacus.AI with three-stage processing:
+1. Summarize the paper
+2. Extract insights using symbolic logic
+3. Demonstrate insights with C++ code examples
 
 ## Setup
 
