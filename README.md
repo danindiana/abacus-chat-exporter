@@ -1,12 +1,169 @@
 # Abacus.AI Chat Exporter & PDF Processor
 
-Thinking of leaving abacus.ai but can't seem to find anyway to take your data with you? 
+Thinking of leaving abacus.ai but can't seem to find anyway to take your data with you?
 
 Then the Abacus.ai Chat Exporter is for you!
 
 **Two powerful tools for Abacus.AI:**
 1. 💬 **Chat Exporter**: Bulk download your chat conversations to HTML and JSON format
 2. 📄 **PDF Processor**: Batch upload and process PDFs with automated prompts
+
+## 📊 System Architecture
+
+### Repository Structure
+
+```mermaid
+graph TD
+    A[Abacus Chat Exporter] --> B[Export Tools]
+    A --> C[PDF Processing]
+    A --> D[Diagnostic Tools]
+    A --> E[Documentation]
+
+    B --> B1[bulk_export_ai_chat.py]
+    B --> B2[bulk_export_deployment_convos.py]
+    B --> B3[bulk_export_all_projects.py]
+    B --> B4[export_all.sh]
+
+    C --> C1[process_pdfs.py]
+    C --> C2[process_pdfs.sh]
+
+    D --> D1[find_my_chats.py]
+    D --> D2[discover_chats.py]
+    D --> D3[explore_api.py]
+    D --> D4[diagnose.sh]
+
+    E --> E1[README.md]
+    E --> E2[QUICK_REFERENCE.md]
+    E --> E3[FINDING_CHATS.md]
+    E --> E4[PDF_PROCESSING.md]
+    E --> E5[TROUBLESHOOTING.md]
+```
+
+### Chat Export Workflow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant S as Export Script
+    participant API as Abacus.AI API
+    participant FS as File System
+
+    U->>S: Run export_all.sh
+    S->>S: Load ABACUS_API_KEY
+    S->>API: listChatSessions()
+    API-->>S: Return session list
+
+    loop For each session
+        S->>API: exportChatSession(sessionId)
+        alt Export successful
+            API-->>S: HTML content
+            S->>FS: Save .html file
+        else Export fails
+            S->>API: getChatSession(sessionId)
+            API-->>S: Raw chat data
+            S->>S: Render HTML locally
+            S->>FS: Save .html file (fallback)
+        end
+        S->>FS: Save .json file (raw data)
+    end
+
+    S-->>U: Export complete
+```
+
+### PDF Processing Workflow
+
+```mermaid
+flowchart TD
+    Start([Start PDF Processing]) --> Input[/User provides: Source Dir, Deployment ID/]
+    Input --> Scan[Scan directory for PDFs]
+    Scan --> Check{PDFs found?}
+    Check -->|No| Exit1([Exit: No files])
+    Check -->|Yes| Confirm[/Display count and confirm/]
+    Confirm --> Loop{For each PDF}
+
+    Loop --> Upload[Upload PDF to deployment]
+    Upload --> UploadCheck{Upload OK?}
+    UploadCheck -->|No| LogFail[Log upload failure]
+    LogFail --> Next1{More PDFs?}
+
+    UploadCheck -->|Yes| Conv[Create deployment conversation]
+    Conv --> P1[Prompt 1: Summarize paper]
+    P1 --> P2[Prompt 2: Symbolic logic insights]
+    P2 --> P3[Prompt 3: C++ code examples]
+    P3 --> LogSuccess[Log processing results]
+    LogSuccess --> Next1
+
+    Next1 -->|Yes| Loop
+    Next1 -->|No| Summary[Display success/fail summary]
+    Summary --> Exit2([Exit: Complete])
+```
+
+### API Integration Architecture
+
+```mermaid
+graph LR
+    subgraph Client Side
+        A[Python Scripts]
+        B[Shell Scripts]
+        C[AbacusAI SDK]
+    end
+
+    subgraph Abacus.AI Platform
+        D[Authentication]
+        E[Chat API]
+        F[Deployment API]
+        G[Document Upload]
+    end
+
+    subgraph Data Storage
+        H[JSON Exports]
+        I[HTML Exports]
+        J[Activity Logs]
+    end
+
+    A --> C
+    B --> C
+    C --> D
+    D --> E
+    D --> F
+    D --> G
+
+    E --> H
+    E --> I
+    F --> J
+    G --> J
+```
+
+### Troubleshooting Decision Tree
+
+```mermaid
+flowchart TD
+    Start([Issue Encountered]) --> Type{What's the problem?}
+
+    Type -->|No chats found| NC1[Run find_my_chats.py]
+    NC1 --> NC2{Chats exist in UI?}
+    NC2 -->|Yes| NC3[Check FINDING_CHATS.md]
+    NC2 -->|No| NC4[Create chats first]
+    NC3 --> NC5[Try project-scoped export]
+
+    Type -->|API errors| API1[Verify API key]
+    API1 --> API2{Key valid?}
+    API2 -->|No| API3[Regenerate key]
+    API2 -->|Yes| API4[Check API metering enabled]
+    API4 --> API5[See PROJECT_SCOPED_SOLUTION.md]
+
+    Type -->|Segmentation fault| SEG1[Run fix_segfault.sh]
+    SEG1 --> SEG2[See TROUBLESHOOTING.md]
+
+    Type -->|Export fails| EXP1{JSON saved?}
+    EXP1 -->|Yes| EXP2[Data preserved, HTML render failed]
+    EXP1 -->|No| EXP3[Check network/permissions]
+
+    Type -->|PDF processing fails| PDF1{Upload or processing?}
+    PDF1 -->|Upload| PDF2[Check deployment ID]
+    PDF1 -->|Processing| PDF3[Review activity logs]
+    PDF3 --> PDF4[Check prompt responses]
+```
 
 ## 🚀 Quick Start
 
