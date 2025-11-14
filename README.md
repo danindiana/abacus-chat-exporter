@@ -8,6 +8,21 @@ Then the Abacus.ai Chat Exporter is for you!
 1. 💬 **Chat Exporter**: Bulk download your chat conversations to HTML and JSON format
 2. 📄 **PDF Processor**: Batch upload and process PDFs with automated prompts
 
+## 📑 Table of Contents
+
+- [System Architecture](#-system-architecture)
+- [Git Workflow & Collaboration](#-git-workflow--collaboration)
+- [Quick Start](#-quick-start)
+- [Setup](#setup)
+- [Usage](#usage)
+- [Output Format](#output-format)
+- [Advanced Usage](#advanced-usage)
+- [API Documentation](#api-documentation)
+- [Compliance](#compliance)
+- [Troubleshooting](#troubleshooting)
+- [Project Files](#project-files)
+- [License](#license)
+
 ## 📊 System Architecture
 
 ### Repository Structure
@@ -164,6 +179,73 @@ flowchart TD
     PDF1 -->|Processing| PDF3[Review activity logs]
     PDF3 --> PDF4[Check prompt responses]
 ```
+
+## 🔀 Git Workflow & Collaboration
+
+This repository follows a structured git workflow for development and collaboration. Whether you're contributing code, fixing bugs, or improving documentation, understanding our git practices will help you contribute effectively.
+
+### Quick Git Reference
+
+```mermaid
+gitGraph
+    commit id: "v1.0.0" tag: "v1.0.0"
+    branch feature/new-exporter
+    checkout feature/new-exporter
+    commit id: "Implement exporter"
+    commit id: "Add tests"
+    checkout main
+    merge feature/new-exporter tag: "v1.1.0"
+    branch hotfix/critical-fix
+    checkout hotfix/critical-fix
+    commit id: "Fix critical bug"
+    checkout main
+    merge hotfix/critical-fix tag: "v1.1.1"
+```
+
+### Branching Strategy
+
+```mermaid
+graph TD
+    A[main] --> B[feature/*]
+    A --> C[bugfix/*]
+    A --> D[hotfix/*]
+    A --> E[docs/*]
+    A --> F[claude/*]
+
+    B --> B1[feature/add-csv-export]
+    C --> C1[bugfix/encoding-error]
+    D --> D1[hotfix/auth-vulnerability]
+    E --> E1[docs/improve-readme]
+    F --> F1[claude/add-diagrams-SessionID]
+
+    style A fill:#4CAF50
+    style B fill:#FF9800
+    style C fill:#F44336
+    style D fill:#9C27B0
+    style E fill:#00BCD4
+    style F fill:#E91E63
+```
+
+### Contribution Workflow
+
+```mermaid
+flowchart LR
+    A[Fork Repo] --> B[Clone Fork]
+    B --> C[Create Branch]
+    C --> D[Make Changes]
+    D --> E[Commit]
+    E --> F[Push to Fork]
+    F --> G[Create PR]
+    G --> H{Review}
+    H -->|Approved| I[Merge]
+    H -->|Changes Needed| D
+```
+
+### Documentation
+
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Complete guide to contributing, including git workflows, commit guidelines, and PR process
+- **[GIT_WORKFLOW.md](GIT_WORKFLOW.md)** - Detailed visual guides for git operations, branching strategies, and collaboration patterns
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture and proposed structural improvements
 
 ## 🚀 Quick Start
 
@@ -382,11 +464,24 @@ See `TROUBLESHOOTING.md` for details.
 - `test_api.py` - Test API connection
 
 ### Documentation
-- `README.md` - This file
-- `QUICK_REFERENCE.md` - Fast lookup for finding & exporting
-- `FINDING_CHATS.md` - Detailed troubleshooting for missing chats
-- `TROUBLESHOOTING.md` - Fix common issues
+
+#### Getting Started
+- `README.md` - This file (main documentation)
 - `QUICKSTART.md` - Basic setup and usage
+- `QUICK_REFERENCE.md` - Fast lookup for finding & exporting
+
+#### Development & Contribution
+- `CONTRIBUTING.md` - Contributing guide with git workflows
+- `GIT_WORKFLOW.md` - Detailed git workflow diagrams and best practices
+- `ARCHITECTURE.md` - System architecture and improvement proposals
+
+#### Troubleshooting Guides
+- `FINDING_CHATS.md` - Detailed troubleshooting for missing chats
+- `FOUND_YOUR_CHATS.md` - What to do when you find your chats
+- `NO_CHATS_FOUND.md` - Diagnosis when no chats are found
+- `TROUBLESHOOTING.md` - Fix common issues
+- `PROJECT_SCOPED_SOLUTION.md` - Project-scoped API solutions
+- `PDF_PROCESSING.md` - PDF processing documentation
 
 ## License
 
