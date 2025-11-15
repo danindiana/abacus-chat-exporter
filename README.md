@@ -1,5 +1,12 @@
 # Abacus.AI Chat Exporter & PDF Processor
 
+[![Tests](https://github.com/danindiana/abacus-chat-exporter/actions/workflows/tests.yml/badge.svg)](https://github.com/danindiana/abacus-chat-exporter/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/danindiana/abacus-chat-exporter/branch/main/graph/badge.svg)](https://codecov.io/gh/danindiana/abacus-chat-exporter)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 Thinking of leaving abacus.ai but can't seem to find anyway to take your data with you?
 
 Then the Abacus.ai Chat Exporter is for you!
@@ -7,6 +14,13 @@ Then the Abacus.ai Chat Exporter is for you!
 **Two powerful tools for Abacus.AI:**
 1. 💬 **Chat Exporter**: Bulk download your chat conversations to HTML and JSON format
 2. 📄 **PDF Processor**: Batch upload and process PDFs with automated prompts
+
+**✨ Features:**
+- 🔄 Comprehensive test coverage (100+ tests)
+- 🔒 Pre-commit hooks for code quality
+- 🎯 CI/CD with GitHub Actions
+- 📊 Multiple export formats (HTML, JSON)
+- 🛡️ Error recovery and fallback mechanisms
 
 ## 📑 Table of Contents
 
@@ -16,6 +30,8 @@ Then the Abacus.ai Chat Exporter is for you!
 - [Setup](#setup)
 - [Usage](#usage)
 - [Output Format](#output-format)
+- [Testing](#-testing)
+- [Development](#-development)
 - [Advanced Usage](#advanced-usage)
 - [API Documentation](#api-documentation)
 - [Compliance](#compliance)
@@ -371,6 +387,167 @@ Complete data dump including:
 - Full message history
 - Timestamps
 - All custom fields
+
+## 🧪 Testing
+
+This project includes a comprehensive test suite with 100+ tests covering all major functionality.
+
+### Quick Test Commands
+
+```bash
+# Install test dependencies
+pip install -r requirements-test.txt
+
+# Run all tests
+pytest
+
+# Run with coverage report
+pytest --cov=. --cov-report=html
+
+# View coverage report
+open htmlcov/index.html  # macOS
+xdg-open htmlcov/index.html  # Linux
+
+# Run only fast unit tests
+pytest -m unit
+
+# Run specific test file
+pytest tests/unit/test_sanitizers.py
+```
+
+### Test Organization
+
+- **Unit Tests** (`tests/unit/`) - Test individual functions in isolation
+  - `test_sanitizers.py` - 50+ tests for filename sanitization
+  - `test_exporters.py` - 30+ tests for export functionality
+  - `test_pdf_processor.py` - 30+ tests for PDF processing
+
+- **Integration Tests** (`tests/integration/`) - Test complete workflows
+  - `test_workflows.py` - End-to-end workflow tests
+
+### Coverage Goals
+
+- **Overall Coverage**: 80%+ ✅
+- **Critical Functions**: 90%+ ✅
+- **Utility Functions**: 100% ✅
+
+### Continuous Integration
+
+Tests run automatically on:
+- Every push to `main`, `develop`, and `claude/*` branches
+- Every pull request
+- Multiple OS (Ubuntu, macOS, Windows)
+- Python 3.8, 3.9, 3.10, 3.11, 3.12
+
+See the [Tests README](tests/README.md) for detailed testing documentation.
+
+## 👨‍💻 Development
+
+### Setting Up Development Environment
+
+```bash
+# Clone the repository
+git clone https://github.com/danindiana/abacus-chat-exporter.git
+cd abacus-chat-exporter
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+pip install -r requirements-test.txt
+
+# Install pre-commit hooks (recommended)
+pip install pre-commit
+pre-commit install
+```
+
+### Pre-commit Hooks
+
+This project uses pre-commit hooks to ensure code quality:
+
+```bash
+# Install hooks
+pre-commit install
+
+# Run hooks manually on all files
+pre-commit run --all-files
+```
+
+The hooks will automatically:
+- ✅ Format code with Black
+- ✅ Sort imports with isort
+- ✅ Check for syntax errors
+- ✅ Run fast unit tests
+- ✅ Check for security issues
+- ✅ Detect secrets in code
+- ✅ Validate YAML/JSON files
+
+### Code Quality Standards
+
+- **Formatting**: Black (line length 100)
+- **Import Sorting**: isort (Black-compatible)
+- **Linting**: flake8
+- **Type Checking**: mypy (optional)
+- **Security**: bandit, detect-secrets
+- **Testing**: pytest with 80%+ coverage
+
+### Running Quality Checks
+
+```bash
+# Format code
+black .
+
+# Sort imports
+isort .
+
+# Run linter
+flake8 .
+
+# Type checking
+mypy *.py
+
+# Security scan
+bandit -r .
+
+# All checks (via pre-commit)
+pre-commit run --all-files
+```
+
+### Project Structure
+
+```
+abacus-chat-exporter/
+├── .github/
+│   └── workflows/
+│       └── tests.yml          # CI/CD pipeline
+├── tests/
+│   ├── unit/                  # Unit tests
+│   ├── integration/           # Integration tests
+│   ├── conftest.py            # Test fixtures
+│   └── README.md              # Testing guide
+├── *.py                       # Main scripts
+├── pytest.ini                 # Pytest configuration
+├── pyproject.toml             # Tool configuration
+├── .pre-commit-config.yaml    # Pre-commit hooks
+├── requirements.txt           # Production dependencies
+└── requirements-test.txt      # Development/test dependencies
+```
+
+### Contributing
+
+We welcome contributions! Please see:
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
+- [GIT_WORKFLOW.md](GIT_WORKFLOW.md) - Git workflow and branching strategy
+- [ARCHITECTURE.md](ARCHITECTURE.md) - System architecture
+
+Before submitting a PR:
+1. ✅ Write tests for new functionality
+2. ✅ Ensure all tests pass (`pytest`)
+3. ✅ Run pre-commit hooks (`pre-commit run --all-files`)
+4. ✅ Update documentation as needed
+5. ✅ Follow the git workflow guidelines
 
 ## Advanced Usage
 
