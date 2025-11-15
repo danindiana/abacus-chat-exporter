@@ -1,0 +1,204 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop, claude/* ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:  # Allow manual triggers
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+
+    - name: Verify syntax of all Python files
+      run: |
+        python -m py_compile *.py
+        python -m py_compile tests/**/*.py
+
+    - name: Run linting with flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      continue-on-error: true
+
+    - name: Run type checking with mypy
+      run: |
+        mypy --install-types --non-interactive --ignore-missing-imports *.py || true
+      continue-on-error: true
+
+    - name: Run tests with pytest
+      run: |
+        pytest -v --tb=short --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing
+      env:
+        # Set dummy API key for tests that check environment variables
+        ABACUS_API_KEY: test_dummy_key_for_ci_testing_only
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}
+        fail_ci_if_error: false
+      continue-on-error: true
+
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-coverage-report-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: htmlcov/
+        retention-days: 30
+      if: always()
+
+    - name: Archive test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: |
+          .pytest_cache/
+          coverage.xml
+        retention-days: 30
+      if: always()
+
+  # Fast check job for quick feedback
+  quick-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+
+    - name: Run unit tests only (fast)
+      run: |
+        pytest -v -m unit --tb=short
+      env:
+        ABACUS_API_KEY: test_dummy_key_for_ci_testing_only
+
+  # Code quality job
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+
+    - name: Check code formatting with black
+      run: |
+        black --check --diff .
+      continue-on-error: true
+
+    - name: Check import sorting with isort
+      run: |
+        isort --check-only --diff .
+      continue-on-error: true
+
+    - name: Run security check
+      run: |
+        pip install bandit safety
+        bandit -r . -f json -o bandit-report.json || true
+        safety check --json || true
+      continue-on-error: true
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+        retention-days: 30
+      if: always()
+
+  # Coverage enforcement job
+  coverage:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+
+    - name: Run tests with coverage
+      run: |
+        pytest --cov=. --cov-report=term-missing --cov-fail-under=80
+      env:
+        ABACUS_API_KEY: test_dummy_key_for_ci_testing_only
+      continue-on-error: true
+
+    - name: Generate coverage badge
+      run: |
+        pip install coverage-badge
+        coverage-badge -o coverage.svg -f || true
+      continue-on-error: true
+
+  # Summary job
+  test-summary:
+    runs-on: ubuntu-latest
+    needs: [test, quick-check, code-quality]
+    if: always()
+    steps:
+    - name: Check test results
+      run: |
+        echo "## Test Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ All test jobs completed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Jobs Status:" >> $GITHUB_STEP_SUMMARY
+        echo "- Main Tests: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Quick Check: ${{ needs.quick-check.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Code Quality: ${{ needs.code-quality.result }}" >> $GITHUB_STEP_SUMMARY

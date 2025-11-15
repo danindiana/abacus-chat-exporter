@@ -1,0 +1,23 @@
+# Testing dependencies for abacus-chat-exporter
+# Install with: pip install -r requirements-test.txt
+
+# Core testing framework
+pytest>=7.4.0
+pytest-cov>=4.1.0          # Coverage reporting
+pytest-mock>=3.11.0         # Mocking utilities
+pytest-xdist>=3.3.0         # Parallel test execution
+
+# Code quality and linting
+black>=23.0.0               # Code formatting
+flake8>=6.0.0              # Linting
+mypy>=1.4.0                # Type checking
+isort>=5.12.0              # Import sorting
+
+# Additional testing utilities
+freezegun>=1.2.0           # Time/date mocking
+responses>=0.23.0          # HTTP request mocking
+faker>=19.0.0              # Test data generation
+
+# Development dependencies (optional but recommended)
+pre-commit>=3.3.0          # Git hooks for code quality
+coverage[toml]>=7.2.0      # Enhanced coverage reporting
