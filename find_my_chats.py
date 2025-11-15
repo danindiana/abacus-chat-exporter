@@ -92,7 +92,8 @@ def main():
             deployments = safe_call(client.list_deployments, project_id=p.project_id)
             if isinstance(deployments, tuple):
                 print(f"     ✗ Error: {deployments[1]}")
-                        print(f"     ✓ Found {len(deployments)} deployment(s)")
+            elif deployments:
+                print(f"     ✓ Found {len(deployments)} deployment(s)")
                 for d in deployments:
                     print(f"       Deployment: {d.name}")
                     print(f"         • ID: {d.deployment_id}")
@@ -127,7 +128,8 @@ def main():
             agents = safe_call(client.list_agents, project_id=p.project_id)
             if isinstance(agents, tuple):
                 print(f"     ✗ Error: {agents[1]}")
-                        print(f"     ✓ Found {len(agents)} agent(s)")
+            elif agents:
+                print(f"     ✓ Found {len(agents)} agent(s)")
                 for a in agents:
                     print(f"       Agent: {a.name}")
                     print(f"         • ID: {a.agent_id}")
