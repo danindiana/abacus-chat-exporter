@@ -1,11 +1,13 @@
 #!/bin/bash
 # Quick diagnostic wrapper to help find your chats
-# Usage: ./diagnose.sh
+# Usage: ./scripts/diagnostic/diagnose.sh
 
 set -e
 
+# Get the project root directory (two levels up from this script)
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
+cd "$PROJECT_ROOT"
 
 # Activate venv
 if [ -d "venv" ] && [ -z "$VIRTUAL_ENV" ]; then
@@ -38,7 +40,7 @@ echo "=" * 60
 echo ""
 
 # Run discovery
-python discover_chats.py
+python scripts/diagnostic/discover_chats.py
 
 echo ""
 echo "=" * 60
@@ -50,7 +52,7 @@ read -p "> " response
 
 if [[ "$response" =~ ^[Yy]$ ]]; then
     echo ""
-    python explore_api.py
+    python scripts/diagnostic/explore_api.py
 fi
 
 echo ""
@@ -59,7 +61,7 @@ echo "📚 Next Steps"
 echo "=" * 60
 echo ""
 echo "1. Check the output above for any found chats/deployments"
-echo "2. Read FINDING_CHATS.md for detailed troubleshooting"
+echo "2. Read docs/FINDING_CHATS.md for detailed troubleshooting"
 echo "3. Visit https://abacus.ai to verify chats exist in the web UI"
-echo "4. If you found chats, run: ./export_all.sh"
+echo "4. If you found chats, run: ./scripts/export/export_all.sh"
 echo ""

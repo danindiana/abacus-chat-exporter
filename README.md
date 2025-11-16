@@ -34,24 +34,24 @@ graph TD
     A --> D[Diagnostic Tools]
     A --> E[Documentation]
 
-    B --> B1[bulk_export_ai_chat.py]
-    B --> B2[bulk_export_deployment_convos.py]
-    B --> B3[bulk_export_all_projects.py]
-    B --> B4[export_all.sh]
+    B --> B1[scripts/export/bulk_export_ai_chat.py]
+    B --> B2[scripts/export/bulk_export_deployment_convos.py]
+    B --> B3[scripts/export/bulk_export_all_projects.py]
+    B --> B4[scripts/export/export_all.sh]
 
-    C --> C1[process_pdfs.py]
-    C --> C2[process_pdfs.sh]
+    C --> C1[scripts/pdf/process_pdfs.py]
+    C --> C2[scripts/pdf/process_pdfs.sh]
 
-    D --> D1[find_my_chats.py]
-    D --> D2[discover_chats.py]
-    D --> D3[explore_api.py]
-    D --> D4[diagnose.sh]
+    D --> D1[scripts/diagnostic/find_my_chats.py]
+    D --> D2[scripts/diagnostic/discover_chats.py]
+    D --> D3[scripts/diagnostic/explore_api.py]
+    D --> D4[scripts/diagnostic/diagnose.sh]
 
     E --> E1[README.md]
-    E --> E2[QUICK_REFERENCE.md]
-    E --> E3[FINDING_CHATS.md]
-    E --> E4[PDF_PROCESSING.md]
-    E --> E5[TROUBLESHOOTING.md]
+    E --> E2[docs/QUICK_REFERENCE.md]
+    E --> E3[docs/FINDING_CHATS.md]
+    E --> E4[docs/PDF_PROCESSING.md]
+    E --> E5[docs/TROUBLESHOOTING.md]
 ```
 
 ### Chat Export Workflow
@@ -155,9 +155,9 @@ graph LR
 flowchart TD
     Start([Issue Encountered]) --> Type{What's the problem?}
 
-    Type -->|No chats found| NC1[Run find_my_chats.py]
+    Type -->|No chats found| NC1[Run scripts/diagnostic/find_my_chats.py]
     NC1 --> NC2{Chats exist in UI?}
-    NC2 -->|Yes| NC3[Check FINDING_CHATS.md]
+    NC2 -->|Yes| NC3[Check docs/FINDING_CHATS.md]
     NC2 -->|No| NC4[Create chats first]
     NC3 --> NC5[Try project-scoped export]
 
@@ -165,10 +165,10 @@ flowchart TD
     API1 --> API2{Key valid?}
     API2 -->|No| API3[Regenerate key]
     API2 -->|Yes| API4[Check API metering enabled]
-    API4 --> API5[See PROJECT_SCOPED_SOLUTION.md]
+    API4 --> API5[See docs/PROJECT_SCOPED_SOLUTION.md]
 
-    Type -->|Segmentation fault| SEG1[Run fix_segfault.sh]
-    SEG1 --> SEG2[See TROUBLESHOOTING.md]
+    Type -->|Segmentation fault| SEG1[Run scripts/utils/fix_segfault.sh]
+    SEG1 --> SEG2[See docs/TROUBLESHOOTING.md]
 
     Type -->|Export fails| EXP1{JSON saved?}
     EXP1 -->|Yes| EXP2[Data preserved, HTML render failed]
@@ -243,9 +243,9 @@ flowchart LR
 
 ### Documentation
 
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Complete guide to contributing, including git workflows, commit guidelines, and PR process
-- **[GIT_WORKFLOW.md](GIT_WORKFLOW.md)** - Detailed visual guides for git operations, branching strategies, and collaboration patterns
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture and proposed structural improvements
+- **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Complete guide to contributing, including git workflows, commit guidelines, and PR process
+- **[GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)** - Detailed visual guides for git operations, branching strategies, and collaboration patterns
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System architecture and proposed structural improvements
 
 ## 🚀 Quick Start
 
@@ -259,7 +259,7 @@ source venv/bin/activate
 export ABACUS_API_KEY="your-key"
 
 # Run the export
-./export_all.sh
+./scripts/export/export_all.sh
 ```
 
 ### ⚠️ Important: Do You Have Chats to Export?
@@ -267,21 +267,21 @@ export ABACUS_API_KEY="your-key"
 **If the export completes but folders are empty:**
 - You may not have created any chats yet
 - Go to https://abacus.ai and verify chats exist in the web UI
-- See **[NO_CHATS_FOUND.md](NO_CHATS_FOUND.md)** for diagnosis
+- See **[NO_CHATS_FOUND.md](docs/NO_CHATS_FOUND.md)** for diagnosis
 
 **If you're seeing API errors:**
-- See **[PROJECT_SCOPED_SOLUTION.md](PROJECT_SCOPED_SOLUTION.md)** 
-- Or **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** for troubleshooting
+- See **[PROJECT_SCOPED_SOLUTION.md](docs/PROJECT_SCOPED_SOLUTION.md)**
+- Or **[QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md)** for troubleshooting
 
 ### Process PDFs
 
 **Batch upload and process PDFs with automated prompts:**
 
 ```bash
-./process_pdfs.sh
+./scripts/pdf/process_pdfs.sh
 ```
 
-See **[PDF_PROCESSING.md](PDF_PROCESSING.md)** for detailed documentation.
+See **[PDF_PROCESSING.md](docs/PDF_PROCESSING.md)** for detailed documentation.
 
 ## Overview
 
@@ -333,7 +333,7 @@ Export all your Data Science Copilot chat sessions:
 
 ```bash
 export ABACUS_API_KEY="your-api-key-here"
-python bulk_export_ai_chat.py
+python scripts/export/bulk_export_ai_chat.py
 ```
 
 This will create a folder `abacus_ai_chat_exports/` containing:
@@ -347,7 +347,7 @@ Export conversations from a specific deployed assistant:
 ```bash
 export ABACUS_API_KEY="your-api-key-here"
 export DEPLOYMENT_ID="your-deployment-id"
-python bulk_export_deployment_convos.py
+python scripts/export/bulk_export_deployment_convos.py
 ```
 
 This will create a folder `abacus_deployment_{DEPLOYMENT_ID}_exports/` with HTML exports.
@@ -411,17 +411,17 @@ If the export script reports "No chat sessions found":
    ```bash
    source venv/bin/activate
    export ABACUS_API_KEY="your-key"
-   python discover_chats.py
+   python scripts/diagnostic/discover_chats.py
    ```
 
 2. **Check the web interface:**
    - Visit https://abacus.ai and verify you have chats
    - Note the URL pattern when viewing a chat
-   - See `FINDING_CHATS.md` for detailed guidance
+   - See `docs/FINDING_CHATS.md` for detailed guidance
 
 3. **Explore API methods:**
    ```bash
-   python explore_api.py
+   python scripts/diagnostic/explore_api.py
    ```
 
 ### Authentication Issues
@@ -440,48 +440,52 @@ The scripts include fallback mechanisms:
 
 If you get segmentation faults (exit code 139):
 ```bash
-./fix_segfault.sh
+./scripts/utils/fix_segfault.sh
 ```
-See `TROUBLESHOOTING.md` for details.
+See `docs/TROUBLESHOOTING.md` for details.
 
 ## Project Files
 
-### Export Scripts
+### Export Scripts (`scripts/export/`)
 - `bulk_export_ai_chat.py` - Export AI Chat sessions
-- `bulk_export_deployment_convos.py` - Export deployment conversations  
+- `bulk_export_deployment_convos.py` - Export deployment conversations
 - `export_all.sh` - Convenience wrapper for both exports
 - `export_with_curl.sh` - Alternative shell-based exporter
 
-### Diagnostic Tools
+### PDF Processing (`scripts/pdf/`)
+- `process_pdfs.py` - Batch PDF upload and processing
+- `process_pdfs.sh` - Shell wrapper for PDF processing
+
+### Diagnostic Tools (`scripts/diagnostic/`)
 - `find_my_chats.py` - 🎯 **Start here** - Comprehensive chat finder
 - `discover_chats.py` - Scan all account resources
 - `explore_api.py` - List all available API methods
 - `diagnose.sh` - Interactive diagnostic tool
 
-### Utilities
+### Utilities (`scripts/utils/`)
 - `activate.sh` - Activate virtual environment
 - `fix_segfault.sh` - Fix Python 3.13 compatibility issues
-- `test_api.py` - Test API connection
+- `test_list_chats.py` - Test API connection
 
 ### Documentation
 
 #### Getting Started
 - `README.md` - This file (main documentation)
-- `QUICKSTART.md` - Basic setup and usage
-- `QUICK_REFERENCE.md` - Fast lookup for finding & exporting
+- `docs/QUICKSTART.md` - Basic setup and usage
+- `docs/QUICK_REFERENCE.md` - Fast lookup for finding & exporting
 
 #### Development & Contribution
-- `CONTRIBUTING.md` - Contributing guide with git workflows
-- `GIT_WORKFLOW.md` - Detailed git workflow diagrams and best practices
-- `ARCHITECTURE.md` - System architecture and improvement proposals
+- `docs/CONTRIBUTING.md` - Contributing guide with git workflows
+- `docs/GIT_WORKFLOW.md` - Detailed git workflow diagrams and best practices
+- `docs/ARCHITECTURE.md` - System architecture and improvement proposals
 
 #### Troubleshooting Guides
-- `FINDING_CHATS.md` - Detailed troubleshooting for missing chats
-- `FOUND_YOUR_CHATS.md` - What to do when you find your chats
-- `NO_CHATS_FOUND.md` - Diagnosis when no chats are found
-- `TROUBLESHOOTING.md` - Fix common issues
-- `PROJECT_SCOPED_SOLUTION.md` - Project-scoped API solutions
-- `PDF_PROCESSING.md` - PDF processing documentation
+- `docs/FINDING_CHATS.md` - Detailed troubleshooting for missing chats
+- `docs/FOUND_YOUR_CHATS.md` - What to do when you find your chats
+- `docs/NO_CHATS_FOUND.md` - Diagnosis when no chats are found
+- `docs/TROUBLESHOOTING.md` - Fix common issues
+- `docs/PROJECT_SCOPED_SOLUTION.md` - Project-scoped API solutions
+- `docs/PDF_PROCESSING.md` - PDF processing documentation
 
 ## License
 
