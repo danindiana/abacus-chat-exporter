@@ -1,14 +1,18 @@
 #!/bin/bash
 # Convenience script to export both AI Chat and Deployment conversations
-# Usage: ./export_all.sh
+# Usage: ./scripts/export/export_all.sh
 
 set -e
 
-# Activate virtual environment if it exists
+# Get the project root directory (two levels up from this script)
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-if [ -d "$SCRIPT_DIR/venv" ] && [ -z "$VIRTUAL_ENV" ]; then
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
+cd "$PROJECT_ROOT"
+
+# Activate virtual environment if it exists
+if [ -d "venv" ] && [ -z "$VIRTUAL_ENV" ]; then
     echo "Activating virtual environment..."
-    source "$SCRIPT_DIR/venv/bin/activate"
+    source venv/bin/activate
 fi
 
 # Check if .env file exists
@@ -46,14 +50,14 @@ echo ""
 
 # Export all deployment conversations (where your chats actually are!)
 echo "📥 Exporting all deployment conversations..."
-if python bulk_export_all_deployment_conversations.py; then
+if python scripts/export/bulk_export_all_deployment_conversations.py; then
     echo "✓ Deployment conversations export completed"
 else
     EXIT_CODE=$?
     echo "❌ Export failed with exit code: $EXIT_CODE"
     if [ $EXIT_CODE -eq 139 ]; then
         echo "⚠️  Segmentation fault detected. This may be a library compatibility issue."
-        echo "Try: ./fix_segfault.sh"
+        echo "Try: ./scripts/utils/fix_segfault.sh"
     fi
     exit $EXIT_CODE
 fi

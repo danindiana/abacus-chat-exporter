@@ -1,11 +1,14 @@
 #!/bin/bash
 # Recreate virtual environment with a more stable Python version
 # This fixes segmentation fault issues with Python 3.13
+# Usage: ./scripts/utils/fix_segfault.sh
 
 set -e
 
+# Get the project root directory (two levels up from this script)
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
+cd "$PROJECT_ROOT"
 
 echo "🔧 Fixing segmentation fault by recreating venv with Python 3.11..."
 echo ""
@@ -46,4 +49,4 @@ echo ""
 echo "✅ Virtual environment recreated successfully!"
 $PYTHON_CMD --version
 echo ""
-echo "You can now run: ./export_all.sh"
+echo "You can now run: ./scripts/export/export_all.sh"

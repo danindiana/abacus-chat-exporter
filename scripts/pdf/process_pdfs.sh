@@ -1,11 +1,14 @@
 #!/bin/bash
 # PDF Processing Wrapper Script
 # Activates venv, checks API key, runs PDF processor
+# Usage: ./scripts/pdf/process_pdfs.sh
 
 set -e
 
+# Get the project root directory (two levels up from this script)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
+cd "$PROJECT_ROOT"
 
 echo "=================================================="
 echo "🚀 Abacus.AI PDF Batch Processor"
@@ -17,7 +20,7 @@ if [ -d "venv" ]; then
     echo "🐍 Activating Python virtual environment..."
     source venv/bin/activate
 else
-    echo "❌ Error: venv not found"
+    echo "❌ Error: venv not found in project root"
     echo "   Run: python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt"
     exit 1
 fi
@@ -60,7 +63,7 @@ echo "=================================================="
 echo
 
 # Run the PDF processor
-python3 process_pdfs.py
+python3 scripts/pdf/process_pdfs.py
 
 echo
 echo "=================================================="
